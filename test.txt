@@ -1,3 +1,6 @@
 
 
 Gwapo ko (master nag edit)
+
+
+GWAPO KO (Master Nag Edit) is a script for the Emacs text editor that allows you to easily edit your .nag files, which are used by Nag### 1.0.2 - February
