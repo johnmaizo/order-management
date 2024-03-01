@@ -6,14 +6,17 @@ const orderService = require("./order.service");
 const Role = require("../_helpers/role");
 
 // Routes
-router.post("/", createSchema, createOrder);
-router.get("/", viewOrders);
-router.get("/:id", getOrderById);
-router.put("/:id", updateSchema, updateOrder);
-router.get("/:id/status", getOrderStatus);
+router.post("/", createSchema, createOrder); // Create a new order
+router.get("/", viewOrders); // View orders
+router.get("/:id", getOrderById); // Get order by ID
+router.put("/:id", updateSchema, updateOrder); // Update order by ID
+router.get("/:id/status", getOrderStatus); // Get order status by ID
 
 module.exports = router;
 
+// Controller functions
+
+// Create a new order
 async function createOrder(req, res, next) {
   try {
     await orderService.createNewProduct(req.body);
@@ -23,6 +26,7 @@ async function createOrder(req, res, next) {
   }
 }
 
+// View orders
 async function viewOrders(req, res, next) {
   try {
     const orders = await orderService.viewOrders(req.query);
@@ -32,17 +36,18 @@ async function viewOrders(req, res, next) {
   }
 }
 
+// Get order by ID
 async function getOrderById(req, res, next) {
   const {role} = req.query;
   try {
     const order = await orderService.getOrderById(req.params.id, role);
-
     res.json(order);
   } catch (error) {
     next(error);
   }
 }
 
+// Update order by ID
 async function updateOrder(req, res, next) {
   const {role} = req.query;
   try {
@@ -53,6 +58,7 @@ async function updateOrder(req, res, next) {
   }
 }
 
+// Get order status by ID
 async function getOrderStatus(req, res, next) {
   const {role} = req.query;
   try {
@@ -63,23 +69,26 @@ async function getOrderStatus(req, res, next) {
   }
 }
 
-// Schemas
+// Request validation schemas
+
+// Schema for creating a new order
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    productName: Joi.string().required(),
-    productQuantity: Joi.number().required(),
-    productPrice: Joi.number().required(),
-    customerName: Joi.string().required(),
-    orderStatus: Joi.number().default(1),
+    productName: Joi.string().required(), // Name of the product
+    productQuantity: Joi.number().required(), // Quantity of the product
+    productPrice: Joi.number().required(), // Price of the product
+    customerName: Joi.string().required(), // Name of the customer
+    orderStatus: Joi.number().default(1), // Status of the order (default to 'Placing Order')
   });
   validateRequest(req, next, schema);
 }
 
+// Schema for updating an order
 function updateSchema(req, res, next) {
   const schema = Joi.object({
-    productName: Joi.string().empty(""),
-    customerName: Joi.string().empty(""),
-    orderStatus: Joi.number().valid(0, 1, 2, 3, 4, 5).empty(""),
+    productName: Joi.string().empty(""), // Optional: New name of the product
+    customerName: Joi.string().empty(""), // Optional: New name of the customer
+    orderStatus: Joi.number().valid(0, 1, 2, 3, 4, 5).empty(""), // Optional: New status of the order
   });
   validateRequest(req, next, schema);
 }
