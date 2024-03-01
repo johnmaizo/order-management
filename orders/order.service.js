@@ -65,6 +65,8 @@ async function updateOrder(id, params, role) {
   const order = await db.Product.findByPk(id);
   if (!order) throw "Order not found";
 
+  if (!role) throw "Unauthorized User";
+
   // If the update is requested by the customer, only update order status
   if (isCustomerUpdate(params, role)) {
     Object.assign(order, params);
