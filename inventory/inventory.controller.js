@@ -1,21 +1,26 @@
+// Importing required modules
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-
 const validateRequest = require('_middleware/validate-request');
-
 const productService = require('./inventory.service');
 
-
-
+// Exporting the router
 module.exports = router;
 
-router.get('/',getAll);
+// Route: GET '/'
+// Function: getAll - Handles the GET request to retrieve all products
+router.get('/', getAll);
+
+// Route: POST '/'
+// Middleware: validateUpdateInventoryRequest - Validates the request body for updating inventory
+// Function: updateInventory - Handles the POST request to update inventory
 router.post('/', validateUpdateInventoryRequest, updateInventory);
 
+// Function: getAll - Retrieves all products from the service and sends a JSON response
 async function getAll(req, res, next) {
     try {
-        const products = await productService.getAll(req.query,{
+        const products = await productService.getAll(req.query, {
             attributes: ["id", "productname", "productcategory", "quantity"]
         });
 
@@ -25,21 +30,18 @@ async function getAll(req, res, next) {
     }
 }
 
-
-
-
+// Function: updateInventory - Updates the inventory based on the request body
 async function updateInventory(req, res, next) {
     try {
-       
-        const {id,  quantity } = req.body;
+        const { id, quantity } = req.body;
 
         // Validate request body
-        if (!id ) {
+        if (!id) {
             return res.status(400).json({ message: "id and quantity are required" });
         }
 
         // Update inventory
-        await productService.updateInventory(id, quantity,req.query);
+        await productService.updateInventory(id, quantity, req.query);
 
         res.json({ message: "Inventory updated successfully" });
     } catch (error) {
@@ -47,6 +49,7 @@ async function updateInventory(req, res, next) {
     }
 }
 
+// Function: validateUpdateInventoryRequest - Validates the request body using Joi schema
 function validateUpdateInventoryRequest(req, res, next) {
     const schema = Joi.object({
         id: Joi.number().required(),
