@@ -21,7 +21,7 @@ router.post('/', validateUpdateInventoryRequest, updateInventory);
 async function getAll(req, res, next) {
     try {
         const products = await productService.getAll(req.query, {
-            attributes: ["id", "productname", "productcategory", "quantity"]
+            attributes: ["id", "productname", "productcategory", "stock"]
         });
 
         res.json(products);
@@ -33,15 +33,15 @@ async function getAll(req, res, next) {
 // Function: updateInventory - Updates the inventory based on the request body
 async function updateInventory(req, res, next) {
     try {
-        const { id, quantity } = req.body;
+        const { id, stock } = req.body;
 
         // Validate request body
         if (!id) {
-            return res.status(400).json({ message: "id and quantity are required" });
+            return res.status(400).json({ message: "id and stock are required" });
         }
 
         // Update inventory
-        await productService.updateInventory(id, quantity, req.query);
+        await productService.updateInventory(id, stock, req.query);
 
         res.json({ message: "Inventory updated successfully" });
     } catch (error) {

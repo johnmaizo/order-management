@@ -16,7 +16,7 @@ async function getAll({ role }, options) {
 }
 
 // Function: updateInventory - Updates the quantity of a product, authorized for certain roles
-async function updateInventory(productId, newQuantity, { role }) {
+async function updateInventory(productId, newStock, { role }) {
     // Retrieve the product by its ID
     const product = await db.Product.findByPk(productId);
 
@@ -26,7 +26,7 @@ async function updateInventory(productId, newQuantity, { role }) {
     }
 
     // Update the quantity of the product
-    product.quantity = newQuantity;
+    product.stock = newStock;
 
     // Authorize the user based on their role
     authorize(role, [Role.Admin, Role.Manager]);
