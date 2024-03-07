@@ -6,10 +6,10 @@ function model(sequelize) {
   // Define the attributes of the Product model
   const attributes = {
     productName: { type: DataTypes.STRING, allowNull: false }, // Name of the product
-    productQuantity: { type: DataTypes.INTEGER, allowNull: false }, // Quantity of the product
+    productStock: { type: DataTypes.INTEGER, allowNull: false }, // Quantity of the product
     productPrice: { type: DataTypes.INTEGER, allowNull: false }, // Price of the product
-    customerName: { type: DataTypes.STRING, allowNull: false }, // Name of the customer who placed the order
-    orderStatus: { type: DataTypes.INTEGER, allowNull: false }, // Status of the order
+    ProductDetails: { type: DataTypes.STRING, allowNull: false }, // Name of the customer who placed the order
+    IsActive: { type: DataTypes.BOOLEAN, allowNull: false }, // Status of the order
   };
 
   // Additional options for the model
