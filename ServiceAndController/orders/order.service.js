@@ -1,19 +1,19 @@
 const db = require("_helpers/db");
 const {Op} = require("sequelize");
-const Role = require("../_helpers/role");
+const Role = require("_helpers/role");
 
 module.exports = {
   getAll,
-  createNewProduct,
+  createNewOrder,
   viewOrders,
   getOrderById,
   updateOrder,
   getOrderStatus,
 };
 
-// Get all products
+// Get all Orders
 async function getAll() {
-  return await db.Product.findAll();
+  return await db.Order.findAll();
 }
 
 // View orders (accessible by Admin and Manager roles)
@@ -22,9 +22,15 @@ async function viewOrders({role}) {
   authorize(role, [Role.Admin, Role.Manager]);
 
   // Fetch orders with specific attributes
-  return await db.Product.findAll({
-    attributes: ["id", "productName", "customerName"],
+  const orders = await db.Order.findAll({
+    attributes: ["id", "orderName", "customerName"],
   });
+
+  if (orders.length === 0) {
+    throw "The Order is empty.";
+  }
+
+  return orders;
 }
 
 // Get order by ID (accessible by Admin and Manager roles)
@@ -33,7 +39,7 @@ async function getOrderById(id, role) {
   authorize(role, [Role.Admin, Role.Manager]);
 
   // Find order by primary key
-  const order = await db.Product.findByPk(id);
+  const order = await db.Order.findByPk(id);
   if (!order) throw "Order not found";
 
   return order;
@@ -41,7 +47,7 @@ async function getOrderById(id, role) {
 
 // Get order status by ID (accessible by Customer role)
 async function getOrderStatus(id, role) {
-  const order = await db.Product.findByPk(id);
+  const order = await db.Order.findByPk(id);
   if (!order) throw "Order not found";
 
   // Authorize the user role
@@ -51,18 +57,18 @@ async function getOrderStatus(id, role) {
   return getStatusMessage(order.orderStatus);
 }
 
-// Create a new product (order)
-async function createNewProduct(params) {
-  // Create a new product instance
-  const product = new db.Product(params);
-  // Save the product to the database
-  await product.save();
+// Create a new order
+async function createNewOrder(params) {
+  // Create a new order instance
+  const order = new db.Order(params);
+  // Save the order to the database
+  await order.save();
 }
 
 // Update order details by ID (accessible by Admin, Manager, and Customer roles)
 async function updateOrder(id, params, role) {
   // Find order by ID
-  const order = await db.Product.findByPk(id);
+  const order = await db.Order.findByPk(id);
   if (!order) throw "Order not found";
 
   if (!role) throw "Unauthorized User";
