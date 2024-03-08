@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
 const validateRequest = require("_middleware/validate-request");
-const orderService = require("./product.service");
-const Role = require("../_helpers/role");
+const orderService = require("./order.service");
 
 // Routes
 router.post("/", createSchema, createOrder); // Create a new order
@@ -19,7 +18,7 @@ module.exports = router;
 // Create a new order
 async function createOrder(req, res, next) {
   try {
-    await orderService.createNewProduct(req.body);
+    await orderService.createNewOrder(req.body);
     res.json({message: "Order created successfully!!"});
   } catch (error) {
     next(error);
@@ -74,9 +73,9 @@ async function getOrderStatus(req, res, next) {
 // Schema for creating a new order
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    productName: Joi.string().required(), // Name of the product
-    productQuantity: Joi.number().required(), // Quantity of the product
-    productPrice: Joi.number().required(), // Price of the product
+    orderName: Joi.string().required(), // Name of the order
+    orderQuantity: Joi.number().required(), // Quantity of the order
+    orderPrice: Joi.number().required(), // Price of the order
     customerName: Joi.string().required(), // Name of the customer
     orderStatus: Joi.number().default(1), // Status of the order (default to 'Placing Order')
   });
@@ -86,7 +85,7 @@ function createSchema(req, res, next) {
 // Schema for updating an order
 function updateSchema(req, res, next) {
   const schema = Joi.object({
-    productName: Joi.string().empty(""), // Optional: New name of the product
+    orderName: Joi.string().empty(""), // Optional: New name of the order
     customerName: Joi.string().empty(""), // Optional: New name of the customer
     orderStatus: Joi.number().valid(0, 1, 2, 3, 4, 5).empty(""), // Optional: New status of the order
   });
