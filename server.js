@@ -25,15 +25,12 @@ app.use(
 
 
 // Api Routes
-<<<<<<< HEAD
-app.use('/product', require('./product/product.controller'));
-=======
+app.use('/product', require('./ServiceAndController/products/products.controller'));
 app.use("/orders", require("./ServiceAndController/orders/orders.controller"));
 app.use("/products", require("./ServiceAndController/products/products.controller"));
 app.use("/inventory", require("./ServiceAndController/inventories/inventories.controller"));
 app.use("/auth", require("./ServiceAndController/users/users.controller"));
 app.use("/branches", require("./ServiceAndController/branches/branches.controller"));
->>>>>>> 4260d3a378c74f9a85f2f8a5ac60dbe99cca13d4
 
 // Global Error Handler
 app.use(errorHandler);
