@@ -18,7 +18,7 @@ module.exports = router;
 
 // Controller functions
 
-// Create a new order
+// Create a new Product
 async function createProduct(req, res, next) {
   const {role} = req.query;
 
@@ -30,7 +30,7 @@ async function createProduct(req, res, next) {
   }
 }
 
-// View orders
+// View Products
 async function viewProducts(req, res, next) {
   try {
     const products = await productService.viewProducts(req.query);
@@ -40,7 +40,7 @@ async function viewProducts(req, res, next) {
   }
 }
 
-// Get order by ID
+// Get Product by ID
 async function getProductById(req, res, next) {
   const {role} = req.query;
   try {
@@ -62,12 +62,12 @@ async function checkStockAvailability(req, res, next) {
   }
 }
 
-// Update order by ID
+// Update Product by ID
 async function updateProduct(req, res, next) {
   const {role} = req.query;
   try {
     await productService.updateProduct(req.params.id, req.body, role);
-    res.json({message: "Order updated"});
+    res.json({message: "Product updated"});
   } catch (error) {
     next(error);
   }
