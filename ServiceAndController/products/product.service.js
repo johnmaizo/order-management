@@ -18,9 +18,16 @@ async function getAll() {
 async function createNewProduct(params, role) {
   authorize(role, [Role.Admin, Role.Manager]);
 
+  const productName = params.productName
+
+  const existingProduct = await db.Product.findOne({ where: { productName } });
+
+  if (existingProduct) throw "Product already exist";
+
   const product = new db.Product(params);
 
-  await product.save();
+  return await product.save();
+
 }
 
 async function viewProducts({role}) {
@@ -55,7 +62,7 @@ async function getProductById(id, role) {
 }
 
 async function checkStockAvailability(id, role) {
-  authorize(role, [Role.Customer]);
+  authorize(role, [Role.Customer, Role.Admin, Role.Manager]);
 
   const product = await db.Product.findByPk(id);
 
