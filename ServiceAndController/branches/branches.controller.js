@@ -23,15 +23,24 @@ module.exports = router;
 
 // Create a new Branch
 async function createBranch(req, res, next) {
-  const {role} = req.query;
+  const { role } = req.query;
+  const branchData = req.body;
 
   try {
-    await branchService.createNewBranch(req.body, role);
-    res.json({message: "Branch created successfully!!"});
+    // Check if a branch with similar data already exists
+    const existingBranch = await db.Branch.findOne({ where: branchData });
+    if (existingBranch) {
+      return res.status(400).json({ message: "Branch already exists." });
+    }
+
+    // Create a new branch if no existing branch found with similar data
+    await branchService.createNewBranch(branchData, role);
+    res.json({ message: "Branch created successfully!" });
   } catch (error) {
     next(error);
   }
 }
+
 
 // View Branches
 async function viewBranches(req, res, next) {
@@ -45,7 +54,7 @@ async function viewBranches(req, res, next) {
 
 // Get Branch by ID
 async function getBranchById(req, res, next) {
-  const {role} = req.query;
+  const { role } = req.query;
   try {
     const branch = await branchService.getBranchById(req.params.id, role);
     res.json(branch);
@@ -56,10 +65,10 @@ async function getBranchById(req, res, next) {
 
 // Delete Branch by ID
 async function deleteBranch(req, res, next) {
-  const {role} = req.query;
+  const { role } = req.query;
   try {
     await branchService.deleteBranch(req.params.id, role);
-    res.json({message: "Branch deleted successfully"});
+    res.json({ message: "Branch deleted successfully" });
   } catch (error) {
     next(error);
   }
@@ -67,10 +76,10 @@ async function deleteBranch(req, res, next) {
 
 // Update Branch by ID
 async function updateBranch(req, res, next) {
-  const {role} = req.query;
+  const { role } = req.query;
   try {
     await branchService.updateBranch(req.params.id, req.body, role);
-    res.json({message: "Branch updated"});
+    res.json({ message: "Branch updated" });
   } catch (error) {
     next(error);
   }
@@ -78,15 +87,15 @@ async function updateBranch(req, res, next) {
 
 // Controller function to assign user to branch
 async function assignUserToBranch(req, res, next) {
-  const {role} = req.query;
+  const { role } = req.query;
 
   try {
-    const {branchId, userId} = req.params;
+    const { branchId, userId } = req.params;
 
     // Call the service function to assign the user to the branch
     await branchService.assignUserToBranch(branchId, userId, role);
 
-    res.json({message: "User assigned to branch successfully"});
+    res.json({ message: "User assigned to branch successfully" });
   } catch (error) {
     next(error);
   }

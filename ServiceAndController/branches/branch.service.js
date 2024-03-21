@@ -23,14 +23,14 @@ async function createNewBranch(params, role) {
   await branch.save();
 }
 
-async function viewBranches({role}) {
+async function viewBranches({ role }) {
   authorize(role, [Role.Admin]);
 
   const branches = await db.Branch.findAll({
     where: {
       isActive: true,
     },
-    attributes: ["id", "branchName"],
+    attributes: ["id", "branchName", "branchLocation"],
   });
 
   if (branches.length === 0) {
@@ -44,7 +44,8 @@ async function getBranchById(id, role) {
   authorize(role, [Role.Admin, Role.Customer]);
 
   // Find Branch by primary key
-  const branch = await db.Branch.findByPk(id);
+  const branch = await db.Branch.findByPk(id, { include: db.User });
+
   if (!branch) throw "Branch not found";
 
   if (branch.isActive === true) {
