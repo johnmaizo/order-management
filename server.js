@@ -25,6 +25,7 @@ app.use(
 
 
 // Api Routes
+app.use('/product', require('./ServiceAndController/products/products.controller'));
 app.use("/orders", require("./ServiceAndController/orders/orders.controller"));
 app.use("/products", require("./ServiceAndController/products/products.controller"));
 app.use("/inventory", require("./ServiceAndController/inventories/inventories.controller"));
